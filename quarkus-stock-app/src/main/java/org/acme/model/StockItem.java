@@ -39,4 +39,12 @@ public class StockItem  implements Serializable {
       this.price = price;
    }
 
+   @Override
+   public String toString() {
+      return "StockItem{" +
+            "name='" + name + '\'' +
+            ", price=" + price +
+            ", quantity=" + quantity +
+            '}';
+   }
 }

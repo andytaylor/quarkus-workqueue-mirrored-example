@@ -17,12 +17,35 @@ const Stocks = ({ stocks }) => {
         console.log("closing wizard")
     }
 
+    const openWizard = (name, quantity, price) => {
+        setName(name)
+        setQuantity(quantity)
+        setPrice(price)
+        setIsWizardOpen(true)
+    }
+
     const validate = onNext => {
+        const object = { name: name, price: price , quantity: quantity };
+        fetch('/stock/update', {
+            headers: {
+                'Accept': 'application/json',
+                'Content-type': 'application/json'
+            },
+            method: 'PUT',
+            body: JSON.stringify(object)
+        })
+            .then(res => res.json())
+            .then((data) => {
+            console.log(data)
+        })
+        .catch(console.log)
+        window.location.reload(false);
         setIsWizardOpen(false)
         console.log("submitting wizard")
     }
 
     const [isWizardOpen, setIsWizardOpen] = React.useState(false);
+    const [ name, setName ] = React.useState("");
     const [ quantity, setQuantity ] = React.useState(0);
     const [ price, setPrice ] = React.useState(0.00);
 
@@ -50,6 +73,7 @@ const Stocks = ({ stocks }) => {
     const steps = [
           { id: 0, name: 'Enter Stock Data', component:
            <Form isHorizontal>
+                <title>{name}</title>
                 <FormGroup label="Quantity" isRequired fieldId="horizontal-form-name">
                   <TextInput
                     value={quantity}
@@ -63,7 +87,7 @@ const Stocks = ({ stocks }) => {
                 </FormGroup>
                 <FormGroup label="Price" isRequired fieldId="horizontal-form-name">
                   <TextInput
-                    value={price}
+                    value={parseFloat(price).toFixed(2)}
                     isRequired
                     type="text"
                     id="horizontal-form-name"
@@ -104,7 +128,9 @@ const Stocks = ({ stocks }) => {
                             <td role="cell" data-label="name">{stock.name}</td>
                             <td role="cell" data-label="quantity">{stock.quantity}</td>
                             <td role="cell" data-label="price">{formatter.format(stock.price)}</td>
-                            <td role="cell" data-label="action"><Button variant="primary" onClick={() => setIsWizardOpen(!isWizardOpen)}>Update</Button></td>
+                            <td role="cell" data-label="action">
+                                <Button variant="primary" onClick={() => openWizard(stock.name, stock.quantity, stock.price)}>Update</Button>
+                            </td>
                         </tr>
                 ))}
                 </tbody>
