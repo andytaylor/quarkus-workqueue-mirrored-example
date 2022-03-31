@@ -1,9 +1,13 @@
 package org.acme.model;
 
 import java.io.Serializable;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.spi.JsonProvider;
 
 public class StockItem  implements Serializable {
 
+   JsonProvider provider = JsonProvider.provider();
    private String name;
    private double price;
    private int quantity;
@@ -46,5 +50,15 @@ public class StockItem  implements Serializable {
             ", price=" + price +
             ", quantity=" + quantity +
             '}';
+   }
+
+   public String toJsonString() {
+      return "{\"name\":\"" + name + "\",\"price\":" + price + ",\"quantity\":" + quantity + "}";
+   }
+
+   public JsonObject toJSONObject() {
+      JsonObjectBuilder objectBuilder = provider.createObjectBuilder();
+      objectBuilder.add("name", name).add("price", price).add("quantity", quantity);
+      return objectBuilder.build();
    }
 }

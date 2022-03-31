@@ -18,6 +18,7 @@
     <quarkus.platform.version>2.7.5.Final</quarkus.platform.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
     <quarkus-test-artemis-version>1.0.1</quarkus-test-artemis-version>
+    <jakarta.json-api.version>1.1.6</jakarta.json-api.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -62,7 +63,11 @@
       <artifactId>quarkus-test-artemis</artifactId>
       <version>${quarkus-test-artemis-version}</version>
       <scope>test</scope>
-    </dependency>
+    </dependency> <dependency>
+    <groupId>jakarta.json</groupId>
+    <artifactId>jakarta.json-api</artifactId>
+    <version>${jakarta.json-api.version}</version>
+  </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -94,6 +99,45 @@
             <maven.home>${maven.home}</maven.home>
           </systemPropertyVariables>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>1.11.2</version>
+        <configuration>
+          <workingDirectory>${project.basedir}/src/main/webapp</workingDirectory>
+          <installDirectory>target</installDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>install node and npm</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+            <configuration>
+              <nodeVersion>v14.8.0</nodeVersion>
+              <npmVersion>8.5.5</npmVersion>
+            </configuration>
+          </execution>
+          <execution>
+            <id>npm install</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>install</arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>npm run build</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>run prod</arguments>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

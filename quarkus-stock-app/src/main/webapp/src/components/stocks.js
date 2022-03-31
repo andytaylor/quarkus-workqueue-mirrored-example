@@ -12,15 +12,20 @@ const Stocks = ({ stocks }) => {
         setPrice(value)
     }
 
+    const handleNameChange = value => {
+        setName(value)
+    }
+
     const onClose = () => {
         setIsWizardOpen(false)
         console.log("closing wizard")
     }
 
-    const openWizard = (name, quantity, price) => {
+    const openWizard = (name, quantity, price, isCreateNew) => {
         setName(name)
         setQuantity(quantity)
         setPrice(price)
+        setIsCreateNew(isCreateNew)
         setIsWizardOpen(true)
     }
 
@@ -45,6 +50,7 @@ const Stocks = ({ stocks }) => {
     }
 
     const [isWizardOpen, setIsWizardOpen] = React.useState(false);
+    const [isCreateNew, setIsCreateNew] = React.useState(false);
     const [ name, setName ] = React.useState("");
     const [ quantity, setQuantity ] = React.useState(0);
     const [ price, setPrice ] = React.useState(0.00);
@@ -71,9 +77,21 @@ const Stocks = ({ stocks }) => {
     );
 
     const steps = [
-          { id: 0, name: 'Enter Stock Data', component:
+          { id: 0, name: 'Enter Stock Data:', component:
            <Form isHorizontal>
-                <title>{name}</title>
+                <b>{name}</b>
+                { isCreateNew && (
+                <FormGroup label="Name" isRequired fieldId="horizontal-form-name">
+                  <TextInput
+                    value={name}
+                    isRequired
+                    type="text"
+                    id="horizontal-form-name"
+                    aria-describedby="horizontal-form-name-helper"
+                    name="horizontal-form-name"
+                    onChange={handleNameChange}/>
+                </FormGroup>)
+                }
                 <FormGroup label="Quantity" isRequired fieldId="horizontal-form-name">
                   <TextInput
                     value={quantity}
@@ -87,7 +105,7 @@ const Stocks = ({ stocks }) => {
                 </FormGroup>
                 <FormGroup label="Price" isRequired fieldId="horizontal-form-name">
                   <TextInput
-                    value={parseFloat(price).toFixed(2)}
+                    value={price}
                     isRequired
                     type="text"
                     id="horizontal-form-name"
@@ -112,7 +130,7 @@ const Stocks = ({ stocks }) => {
           <main className="pf-c-page__main" tabIndex="-1">
             <section className="pf-c-page__main-section pf-m-light">
             <table className="pf-c-table pf-m-grid-md" role="grid" aria-label="Current Stock Status" id="table-basic">
-                <caption>Stock</caption>
+                <caption>Stock      <Button variant="primary" onClick={() => openWizard("name", 0.00, 0, true)}>New</Button></caption>
                 <thead>
                     <tr role="row">
                         <th role="columnheader" scope="col">Name</th>
@@ -129,7 +147,7 @@ const Stocks = ({ stocks }) => {
                             <td role="cell" data-label="quantity">{stock.quantity}</td>
                             <td role="cell" data-label="price">{formatter.format(stock.price)}</td>
                             <td role="cell" data-label="action">
-                                <Button variant="primary" onClick={() => openWizard(stock.name, stock.quantity, stock.price)}>Update</Button>
+                                <Button variant="primary" onClick={() => openWizard(stock.name, stock.quantity, stock.price, false)}>Update</Button>
                             </td>
                         </tr>
                 ))}

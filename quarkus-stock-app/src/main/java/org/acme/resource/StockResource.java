@@ -1,6 +1,6 @@
 package org.acme.resource;
 
-import org.acme.jms.PriceConsumer;
+import org.acme.jms.StockClient;
 import org.acme.model.StockItem;
 
 import javax.inject.Inject;
@@ -12,10 +12,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,14 +31,7 @@ public class StockResource {
     }
 
     @Inject
-    PriceConsumer consumer;
-
-    @GET
-    @Path("last")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String last() {
-        return consumer.getLastPrice();
-    }
+    StockClient stockClient;
 
     @GET
     @Path("all")
